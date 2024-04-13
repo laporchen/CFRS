@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, computed, watch } from 'vue'
+import { getPairedIndex } from './util/utils'
+
+import Instruction from './components/Instruction.vue'
 
 const canvaSize = ref(256 * 3)
 const pixelSize = computed(() => {
@@ -106,21 +109,6 @@ function validateCommand(command: string) {
   return stack.length === 0
 }
 
-function getPairedIndex(command: string, index: number) {
-  let stack = []
-  for (let i = 0; i < command.length; i++) {
-    const char = command[i]
-    if (char === '[') {
-      stack.push(i)
-    } else if (char === ']') {
-      if (!stack.length) return -1
-      if (stack[stack.length - 1] === index) return i
-      stack.pop()
-    }
-  }
-  return -1
-}
-
 /**
 * Parse commands
 * Only pass in valid commands
@@ -145,6 +133,10 @@ function parseCommands(command: string) {
     }
   }
 }
+
+const isCommandValid = computed(() => {
+  return validateCommand(commands.value)
+})
 
 function run() {
   if (!validateCommand(commands.value)) {
@@ -181,6 +173,7 @@ watch(canvaSize, () => {
         <button @click="run">Run</button>
       </div>
     </div>
+    <Instruction class="instruction" v-if="isCommandValid" :command="commands" />
     <canvas ref="canvas" id="canvas" :width="canvaSize" :height="canvaSize"></canvas>
   </div>
 </template>
@@ -213,4 +206,12 @@ watch(canvaSize, () => {
 .cmdString {
   width: 600px;
 }
+
+.instruction {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+}
+
 </style>
