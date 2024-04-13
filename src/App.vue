@@ -172,6 +172,10 @@ watch(canvaSize, () => {
 <template>
   <div class="wrapper">
     <div class="inputs">
+      <div>
+        F - Move forward, R - Turn 45 degree clockwise, C - Change to next color <br>
+        [ ] - Repeat commands inside square brackets
+      </div>
       <div class="cmd">
         <input v-model="commands" class="cmdString" placeholder="Enter commands" />
         <button @click="run">Run</button>
@@ -185,6 +189,7 @@ watch(canvaSize, () => {
 .wrapper {
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -193,8 +198,6 @@ watch(canvaSize, () => {
 }
 
 .inputs {
-  position: fixed;
-  top: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
